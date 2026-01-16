@@ -32,6 +32,14 @@ It only prevents you from **skipping the act of deciding**.
 
 ---
 
+## Constitution
+
+VCDesign is a philosophy that, in an always-on high-speed optimization environment,
+designs where judgment and responsibility reside to sustain the value humans and systems create.
+Its implementation attitude is regeneration-premise design.
+
+---
+
 ## Background Philosophy
 
 We assume the environment is:
