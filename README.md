@@ -166,3 +166,17 @@ but VCDesign does not depend on this repository.
 
 > **This system does not design for you.  
 > It prevents you from skipping design responsibility.**
+
+---
+
+## Context
+
+This repository is part of a broader design philosophy exploring
+how responsibility, boundaries, and decision-making should be handled
+in AI-assisted systems.
+
+- VCDesign (design philosophy & architecture):
+  https://vcdesign.org/
+
+This project can be used independently.
+Understanding VCDesign is not required.
