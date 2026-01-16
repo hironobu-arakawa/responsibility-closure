@@ -1,0 +1,131 @@
+# sample_manifest.yaml
+# Example: Dinner Recommendation (Low-risk, daily decision)
+# Purpose: Demonstrate Responsibility Closure Loop in a lightweight domain
+
+meta:
+  name: "daily_dinner_recommendation"
+  version: "0.1"
+  owner: "household_user"
+  last_updated: "2026-01-16"
+
+context:
+  environment: "Always-On High-Speed Optimization"
+  philosophy:
+    vcdesign_definition: >
+      This system supports human judgment without replacing it.
+      Final responsibility for decisions remains with the user.
+
+constitution:
+  fixed_principles:
+    - delta_requires_resolution
+    - boundary_violation_must_stop
+    - no_evidence_no_final_decision
+    - resolution_cannot_be_skipped
+    - close_by_root_allowed
+
+responsibility:
+  final_owner:
+    role: "household_user"
+    fallback_role: "NA"  # Individual use; no delegation
+
+  evidence_requirements:
+    required_fields:
+      - who
+      - when
+      - what
+      - conditions
+    storage: "NA"
+    note: "Evidence is lightweight; logs are not persisted across days."
+
+policy:
+  timeouts:
+    review_ttl: "PT12H"   # Dinner context; short-lived relevance
+  notifications:
+    channels: ["ui"]
+    digest: "immediate"
+  friction:
+    light_delta: "one_click_allowed"
+    heavy_delta: "reason_required"
+
+loop:
+  P:
+    purpose_value: "Provide meal suggestions that the user can safely choose from"
+    boundaries:
+      - "The system must not finalize meal selection"
+      - "The system must not recommend allergenic ingredients"
+    must_be_true_before_proceed:
+      - "User dietary restrictions are known"
+      - "Basic ingredient availability is confirmed or assumed"
+    notes: >
+      Suggestions are optional.
+      Choosing or ignoring them has no system-side consequence.
+
+  D:
+    components:
+      - name: "meal_suggestion_ui"
+        type: "ui"
+        does_final_decision: false
+        description: "Displays multiple dinner options to the user"
+      - name: "recipe_generation_ai"
+        type: "ai"
+        does_final_decision: false
+        description: "Generates candidate recipes based on preferences"
+
+  Delta:
+    standard_types:
+      - not_executed
+      - delayed
+      - unverified
+      - boundary_violation
+      - no_evidence
+
+    detection_rules:
+      - type: "not_executed"
+        detects: "No suggestion generated today"
+      - type: "delayed"
+        detects: "Suggestions generated after dinner time window"
+      - type: "unverified"
+        detects: "Dietary restriction information missing"
+      - type: "boundary_violation"
+        detects: "Suggested recipe includes restricted ingredients"
+      - type: "no_evidence"
+        detects: "No record of user preference input"
+
+    severity:
+      heavy:
+        - boundary_violation
+        - unverified
+      light:
+        - not_executed
+        - delayed
+
+  R:
+    allowed_actions:
+      - stop
+      - return_to_human
+      - trigger_review
+      - close_by_root
+
+    rules:
+      - when_delta: "boundary_violation"
+        must_include: ["stop"]
+      - when_delta: "no_evidence"
+        prohibits: ["close_as_final"]
+
+    records_minimum:
+      - delta_type
+      - chosen_action
+      - chosen_by
+      - chosen_at
+      - reason_if_heavy_delta
+
+ui_rules:
+  completion_blocking:
+    enabled: false
+    rule: "Dinner suggestions may be skipped without blocking daily flow."
+  escalation_on_delay:
+    enabled: false
+    rule: "Delay does not escalate in low-risk personal context."
+  root_closure:
+    enabled: true
+    rule: "Updating dietary restrictions resolves multiple future deltas."

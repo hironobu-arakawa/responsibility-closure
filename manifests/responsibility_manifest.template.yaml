@@ -1,0 +1,131 @@
+# Responsibility Manifest (Minimum Template) v0.1
+# - Purpose: Make responsibility machine-readable so AI can:
+#   (a) detect missing/ambiguous Preconditions (P)
+#   (b) detect missing Delta (Δ) events
+#   (c) prevent skipping Resolution (R)
+# - This document is "fixed point": implementations may regenerate, this must persist.
+
+meta:
+  name: "<system_or_feature_name>"
+  version: "0.1"
+  owner: "<team_or_role>"
+  last_updated: "<YYYY-MM-DD>"
+
+context:
+  environment: "Always-On High-Speed Optimization"  # 常時高速最適化
+  philosophy:
+    vcdesign_definition: >
+      VCDesign is a philosophy to design where judgment and responsibility live,
+      to keep value continuous in an always-on optimization environment.
+
+constitution:  # 不動点（変更不可）
+  fixed_principles:
+    - delta_requires_resolution            # Δがある限り完了不可
+    - boundary_violation_must_stop         # Δ4は必ず止める（自動継続禁止）
+    - no_evidence_no_final_decision        # Δ5では確定判断禁止
+    - resolution_cannot_be_skipped         # R省略禁止
+    - close_by_root_allowed                # 原因Rootで一括解消可
+
+responsibility:
+  final_owner:
+    role: "<final_accountable_role>"       # 最終責任の所在（空欄禁止）
+    fallback_role: "<fallback_role_or_NA>" # 不在時の代替（NA可だが理由必須）
+
+  evidence_requirements:  # 証跡の成立条件（最低限）
+    required_fields:
+      - who
+      - when
+      - what
+      - conditions
+    storage: "<where_logs_live>"           # e.g., audit_log_db / files / NA
+    note: "<constraints_or_known_gaps>"    # 証跡が取れない領域があるなら明記
+
+policy:  # 可変点（ユーザー/運用が調整してよいが、憲法を上書き不可）
+  timeouts:
+    review_ttl: "PT24H"                    # ISO-8601 duration (e.g., PT8H, P1D)
+  notifications:
+    channels: ["ui", "email", "slack"]     # 例：実装は後で
+    digest: "daily"                        # none は禁止（沈黙禁止）
+  friction:
+    light_delta: "one_click_allowed"
+    heavy_delta: "reason_required"
+
+loop:  # P–D–Δ–R（最小で書く）
+  P:  # Preconditions / Promise（人が書く、曖昧なら進めない）
+    purpose_value: "<what_value_is_continued>"
+    boundaries:
+      - "<what_system_or_ai_must_not_decide>"
+      - "<what_requires_human_resolution>"
+    must_be_true_before_proceed:
+      - "<precondition_1>"
+      - "<precondition_2>"
+    notes: "<free_text>"
+
+  D:  # Do / Decision / Display（捨ててよい＝再生成対象）
+    components:
+      - name: "<ui_or_batch_or_ai_component_name>"
+        type: "ui|batch|ai"
+        does_final_decision: false         # AIは常にfalse
+        description: "<what_it_does>"
+
+  Delta:  # Δ = fact of unfulfilled P (detected, not judged)
+    standard_types:                        # ここは固定（増やすなら別途バージョン管理）
+      - not_executed
+      - delayed
+      - unverified
+      - boundary_violation
+      - no_evidence
+
+    detection_rules:                       # 実装は後でOK、今は意図だけ書く
+      - type: "not_executed"
+        detects: "<what_is_missing>"
+      - type: "delayed"
+        detects: "<ttl_breached_condition>"
+      - type: "unverified"
+        detects: "<verification_missing_condition>"
+      - type: "boundary_violation"
+        detects: "<forbidden_action_or_scope_breach>"
+      - type: "no_evidence"
+        detects: "<missing_minimum_evidence>"
+
+    severity:                              # UI摩擦のための最小分類
+      heavy:
+        - boundary_violation
+        - no_evidence
+        - unverified
+      light:
+        - not_executed
+        - delayed
+
+  R:  # Response / Resolution（省略禁止）
+    allowed_actions:
+      - stop
+      - return_to_human
+      - trigger_review
+      - close_by_root
+
+    rules:
+      - when_delta: "boundary_violation"
+        must_include: ["stop"]             # 原則停止（例外は別途明文化が必要）
+      - when_delta: "no_evidence"
+        prohibits: ["close_as_final"]      # 確定判断として閉じることを禁止（概念ルール）
+
+    records_minimum:                       # Rの証跡（必須）
+      - delta_type
+      - chosen_action
+      - chosen_by
+      - chosen_at
+      - reason_if_heavy_delta
+
+ui_rules:  # Rを省略させないUIルール（実装は後で、原理だけ固定）
+  completion_blocking:
+    enabled: true
+    rule: "If any Delta exists, completion is impossible without recorded R."
+  escalation_on_delay:
+    enabled: true
+    rule: "Delay Delta (delayed) must be raised if review_ttl is breached."
+  root_closure:
+    enabled: true
+    rule: "Root-cause closure may clear multiple symptom deltas."
+
+# End of template
