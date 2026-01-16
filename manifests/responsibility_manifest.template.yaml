@@ -31,6 +31,21 @@ responsibility:
     role: "<final_accountable_role>"       # 最終責任の所在（空欄禁止）
     fallback_role: "<fallback_role_or_NA>" # 不在時の代替（NA可だが理由必須）
 
+  # 個人を特定せず、機能や役割の集合として定義する
+  assignment_pool:
+    type: "fuzzy" # fuzzy（曖昧）| explicit（名簿あり）| dynamic（シフト制）
+    pool_id: "contents_review_team"
+    
+    # 曖昧さの許容範囲定義
+    # 「誰か」が決まっていなくても、「この箱」に入っていればOKとする宣言
+    containment_policy:
+      - "any_member_of_group_X"
+      - "fallback_to_manager_if_no_response_in_1h"
+
+    # プール自体のメンテナンス責任者（Meta-Responsibility）
+    # 「誰が担当か」は曖昧でいいが、「プールが腐っていないか」を見る人は必要
+    pool_maintainer: "The_Continuer (System_Admin)"
+
   evidence_requirements:  # 証跡の成立条件（最低限）
     required_fields:
       - who
