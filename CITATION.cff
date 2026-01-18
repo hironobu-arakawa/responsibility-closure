@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Responsibility Closure Loop (RCL)"
+abstract: >
+  Responsibility Closure Loop (RCL) is a machine-readable framework to ensure
+  that judgment and responsibility are not skipped in system design.
+  It implements the P-D-Delta-R loop to enforce explicit human ownership
+  of decisions in AI-assisted environments.
+authors:
+  - family-names: Arakawa
+    given-names: Hironobu
+version: 0.1.0
+date-released: 2026-01-19 # 公開日に合わせて変更してください
+license: MIT
+repository-code: "https://github.com/VCDesign-org/responsibility-closure"
+keywords:
+  - responsibility-closure-loop
+  - rcl
+  - vcdesign
+  - system-design
+  - ai-governance
+  - responsibility-manifest
